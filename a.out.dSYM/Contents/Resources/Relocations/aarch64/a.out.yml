@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/owencurtis/CSE 232/a.out'
+relocations:     []
+...
