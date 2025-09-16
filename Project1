@@ -53,7 +53,18 @@ std::string GetFirstInList(std::string word_list,
                            std::string word1,
                            std::string word2)
 {
+    size_t pos1 = FindInList(word_list, word1);
+    size_t pos2 = FindInList(word_list, word2)
 
+    if (pos1 > pos2) {
+        return word2;
+    }
+    if (pos1 < pos2) {
+        return word1;
+    }
+    else {
+        return "N/A";
+    }
 }
 
 // Takes a word_list and a word and counts the number of times that word
