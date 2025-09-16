@@ -54,16 +54,25 @@ std::string GetFirstInList(std::string word_list,
                            std::string word2)
 {
     size_t pos1 = FindInList(word_list, word1);
-    size_t pos2 = FindInList(word_list, word2)
+    size_t pos2 = FindInList(word_list, word2);
+
+    if (pos1 == std::string::npos && pos2 == std::string::npos) {
+        return "N/A";
+    }
+
+    if (pos1 == std::string::npos) {
+        return word2;
+    }
+
+    if (pos2 == std::string::npos) {
+        return word1;
+    }
 
     if (pos1 > pos2) {
         return word2;
     }
-    if (pos1 < pos2) {
-        return word1;
-    }
     else {
-        return "N/A";
+        return word1;
     }
 }
 
@@ -71,7 +80,20 @@ std::string GetFirstInList(std::string word_list,
 // is found in the list.
 size_t CountInList(std::string word_list, std::string word) 
 {
+    size_t count = 0;
+    size_t pos = 0;
 
+    while (true) {
+        size_t found = FindInList(word_list, word, pos) {
+            if (found == std::string::npos) {
+                break;
+            }
+            count ++;
+            pos = found + word.size();
+        }
+    }
+
+    return count;
 }
 
 
