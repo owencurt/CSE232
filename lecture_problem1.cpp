@@ -17,15 +17,15 @@ int main() {
         std::cin >> guess;
 
         if (guess > target_number) {
-            std::cout << "The number is lower than your guess" << "\n ";
+            std::cout << "The number is lower than your guess\n ";
             continue;
         }
         else if (guess < target_number) {
-            std::cout << "The number is higher than your guess" << "\n ";
+            std::cout << "The number is higher than your guess\n ";
             continue;
         }
         else {
-            std::cout << "You guessed it correct! " << "\n ";
+            std::cout << "You guessed it correct!\n ";
             break;
         }
     }
