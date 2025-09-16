@@ -2,8 +2,25 @@
 #include <string>
 
 // Test if 'word' is a full entry in 'word_list' beginning as index 'pos'.
-bool AtListPosition(std::string word_list, std::string word, size_t pos)
+bool AtListPosition(std::string word_list, std::string word, size_t pos = 0)
 {
+    if (pos > word_list.size()) {
+        return false;
+    }
+    if (pos + word.size() > word_list.size()) {
+        return false;
+    } 
+    if (word_list.compare(pos, word.size(), word) != 0) {
+        return false;
+    }
+    if (pos != 0 && word_list[pos - 1] != ',') {
+        return false;
+    }
+    if (pos + word.size() != word_list.size() && word_list[pos + word.size()] != ',') {
+        return false;
+    }
+
+    return true;
 }
 
 // Inputs are:
@@ -19,6 +36,7 @@ bool AtListPosition(std::string word_list, std::string word, size_t pos)
 // "def,456,ghi,789,jkl", but NOT in "defeated,indefinitely,redefined"
 size_t FindInList(std::string word_list, std::string word, size_t pos=0)
 {
+
 }
 
 // Takes two strings and a word list.
@@ -28,12 +46,14 @@ std::string GetFirstInList(std::string word_list,
                            std::string word1,
                            std::string word2)
 {
+
 }
 
 // Takes a word_list and a word and counts the number of times that word
 // is found in the list.
 size_t CountInList(std::string word_list, std::string word) 
 {
+
 }
 
 
@@ -57,4 +77,5 @@ size_t CountInList(std::string word_list, std::string word)
 
 int main()
 {
+
 }
