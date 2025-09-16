@@ -2,7 +2,7 @@
 #include <string>
 
 // Test if 'word' is a full entry in 'word_list' beginning as index 'pos'.
-bool AtListPosition(std::string word_list, std::string word, size_t pos = 0)
+bool AtListPosition(std::string word_list, std::string word, size_t pos)
 {
     if (pos > word_list.size()) {
         return false;
@@ -36,12 +36,19 @@ bool AtListPosition(std::string word_list, std::string word, size_t pos = 0)
 // "def,456,ghi,789,jkl", but NOT in "defeated,indefinitely,redefined"
 size_t FindInList(std::string word_list, std::string word, size_t pos=0)
 {
+    if (word.empty() || pos > word_list.size()) {
+        return std::string::npos;
+    }
+
     while (true) {
         size_t word_pos = word_list.find(word, pos);
+        if (word_pos == std::string::npos) {
+            return std::string::npos;
+        }
         if (AtListPosition(word_list, word, word_pos)) {
             return word_pos;
         }
-        pos = word_pos + 1
+        pos = word_pos + 1;
     } 
 
 }
@@ -84,15 +91,13 @@ size_t CountInList(std::string word_list, std::string word)
     size_t pos = 0;
 
     while (true) {
-        size_t found = FindInList(word_list, word, pos) {
-            if (found == std::string::npos) {
-                break;
-            }
-            count ++;
-            pos = found + word.size();
+        size_t found = FindInList(word_list, word, pos);
+        if (found == std::string::npos) {
+            break;
         }
+        count ++;
+        pos = found + word.size();
     }
-
     return count;
 }
 
