@@ -1,0 +1,87 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <cstdint>
+#include <cmath>
+
+// YOUR FUNCTIONS GO HERE
+std::int64_t LocToDec(std::string loc) {
+  std::int64_t sum{};
+
+  for (char ch : loc) {
+    int power = ch - 'a';
+    sum += pow(2, power);
+  }
+  return sum;
+}
+
+std::string Abbreviate(std::string loc) {
+  sort(loc.begin(), loc.end());
+  
+  for (size_t i=0; i < loc.size(); ++i) {
+    if (loc[i] == loc[i + 1]) {
+      char ch = loc[i];
+      char next = static_cast<char>(ch + 1);
+
+      loc.replace(i, 2, 1, next);
+      sort(loc.begin(), loc.end());
+      --i;
+
+    }
+  }
+  return loc;
+}
+
+std::string DecToLoc(std::int64_t dec) {
+  int i{};
+  std::string dtl_result;
+  while (i < dec) {
+    dtl_result += 'a';
+    i += 1;
+  }
+  dtl_result = Abbreviate(dtl_result);
+  return dtl_result;
+}
+
+std::int64_t AddLoc(std::string loc1, std::string loc2) {
+  std::string combined_str;
+  int sum1{};
+  int sum2{};
+
+  sum1 = LocToDec(loc1);
+  sum2 = LocToDec(loc2);
+
+  int final_sum = sum1 + sum2;
+  
+  return final_sum;
+}
+
+int main()
+{
+  std::cout << "Give me a location string: \n";
+  std::string loc1;
+  std::cin >> loc1;
+
+  std::cout << "Give me an integer: \n";
+  int integer{};
+  std::cin >> integer;
+  std::int64_t result = LocToDec(loc1);
+
+  std::string abbrev_result = Abbreviate(loc1);
+  std::cout << loc1 << " to dec: " << result << "\n";
+  std::cout << loc1 << " abbreviated: " << abbrev_result << "\n";
+
+  std::string loc_from_dec{};
+  std::cout << integer << " to loc: " << DecToLoc(integer) << "\n";
+
+  std::cout << "Give me two more location strings: \n";
+  std::string str1;
+  std::string str2;
+  std::cin >> str1;
+  std::cin >> str2;
+  int final = AddLoc(str1, str2);
+  std::cout << "Sum of " << str1 << " and " << str2 << " is: " << final << "\n";
+
+  // YOUR MAIN IO GOES HERE
+  return 0;
+}
