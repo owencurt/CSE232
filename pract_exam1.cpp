@@ -1,37 +1,37 @@
 // Given a vector of ints {4, 1, 4, 2, 1}, remove duplicates and keep result in order: {4, 1, 2}
 
-// #include <vector>
-// #include <iostream>
+#include <vector>
+#include <iostream>
 
-// std::vector<int> RemoveDups(std::vector<int> input) {
+std::vector<int> RemoveDups(std::vector<int> input) {
 
-//     for (size_t i = 0; i < input.size(); i++) {
-//         for (size_t j = i + 1; j < input.size(); ) {
-//             if (input.at(j) == input.at(i)) {
-//                 input.erase(input.begin() + j);
-//             }
-//             else {
-//                 j++;
-//             }
-//         }
-//     }
+    for (size_t i = 0; i < input.size(); i++) {
+        for (size_t j = i + 1; j < input.size(); ) {
+            if (input.at(j) == input.at(i)) {
+                input.erase(input.begin() + j);
+            }
+            else {
+                j++;
+            }
+        }
+    }
 
-//     return input;
-// }
+    return input;
+}
 
 
-// int main() {
+int main() {
 
-//     std::vector<int> v = {4, 1, 4, 2, 1};
-//     std::vector<int> result = RemoveDups(v);
-//     std::vector<int> expected = {4, 1, 2};
+    std::vector<int> v = {4, 1, 4, 2, 1};
+    std::vector<int> result = RemoveDups(v);
+    std::vector<int> expected = {4, 1, 2};
 
-//     if (result == expected) {
-//         std::cout << 1 << "\n";
-//     }
+    if (result == expected) {
+        std::cout << 1 << "\n";
+    }
 
-//     return 0;
-// }
+    return 0;
+}
 
 
 // Given a string like 10, return an incremented version 11. 9 --> 10, etc. You cannot use stoi or other related conversion types (stod, etc.)
