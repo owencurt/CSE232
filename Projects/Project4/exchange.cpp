@@ -9,15 +9,23 @@ void Exchange::MakeDeposit(std::string username, std::string asset, int amount) 
 }
 
 void Exchange::PrintUserPortfolios(std::ostream &os) {
-  for (auto &[username, account] : users_) {
-    os << username << ":\n";
+  os << "User Portfolios (in alphabetical order):\n";
 
+  for (auto it = users_.begin(); it != users_.end(); ++it) {
+    const std::string &username = it->first;
+    const UserAccount &account = it->second;
     auto portfolio = account.GetPortfolio();
-    for (auto &[asset, amount] : portfolio) {
+
+    os << username << "'s Portfolio: ";
+
+    for (auto a = portfolio.begin(); a != portfolio.end(); ++a) {
+      const std::string &asset = a->first;
+      int amount = a->second;
       if (amount > 0) {
-        os << "  " << asset << ": " << amount << "\n";
+        os << amount << " " << asset << ", ";
       }
     }
+    os << "\n";
   }
 }
 

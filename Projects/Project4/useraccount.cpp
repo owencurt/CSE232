@@ -52,7 +52,7 @@ void UserAccount::PerformSell(Order sell_order, Trade trade) {
     portfolio_["USD"] += trade.amount * trade.price;
 }
 
-std::map<std::string, int> UserAccount::GetPortfolio() {
+std::map<std::string, int> UserAccount::GetPortfolio() const {
   return portfolio_;
 }
 
