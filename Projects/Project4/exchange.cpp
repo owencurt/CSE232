@@ -123,10 +123,12 @@ void Exchange::PrintUsersOrders(std::ostream &os) {
 
 
 void Exchange::PrintTradeHistory(std::ostream &os) {
+  os << "Trade History (in chronological order):\n";
+
   for (const auto &t : trade_history_) {
-    os << t.buyer_username << " bought "
-       << t.amount << " " << t.asset
-       << " from " << t.seller_username
+    os << t.buyer_username << " Bought "
+       << t.amount << " of " << t.asset
+       << " From " << t.seller_username
        << " for " << t.price << " USD\n";
   }
 }
