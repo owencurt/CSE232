@@ -19,4 +19,9 @@ class Exchange {
   void PrintUsersOrders(std::ostream &os);
   void PrintTradeHistory(std::ostream &os);
   void PrintBidAskSpread(std::ostream &os);
+
+  private:
+    std::map<std::string, UserAccount> users_;
+    std::vector<Order> open_orders_;
+    std::vector<Trade> trade_history_;
 };
