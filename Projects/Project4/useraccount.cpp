@@ -43,30 +43,48 @@ bool UserAccount::AddOrder(Order order) {
     return true;
 }
 
-void UserAccount::PerformBuy(Order buy_order, Trade trade) {
+void UserAccount::PerformBuy(Order &buy_order, const Trade &trade) {
     for (auto it = open_orders_.begin(); it != open_orders_.end(); ++it) {
-        if (*it == buy_order) {
-            open_orders_.erase(it);
+        if (it->username == buy_order.username &&
+            it->asset == buy_order.asset &&
+            it->side == buy_order.side &&
+            it->price == buy_order.price) {
+
+            it->amount -= trade.amount;
+
+            if (it->amount <= 0) {
+                open_orders_.erase(it);
+            }
             break;
         }
     }
 
     portfolio_[trade.asset] += trade.amount;
 
-    filled_orders_.push_back(buy_order);
+    filled_orders_.push_back({buy_order.username, buy_order.side, trade.asset, trade.amount, trade.price});
 }
 
-void UserAccount::PerformSell(Order sell_order, Trade trade) {
+
+void UserAccount::PerformSell(Order &sell_order, const Trade &trade) {
     for (auto it = open_orders_.begin(); it != open_orders_.end(); ++it) {
-        if (*it == sell_order) {
-            open_orders_.erase(it);
+        if (it->username == sell_order.username &&
+            it->asset == sell_order.asset &&
+            it->side == sell_order.side &&
+            it->price == sell_order.price) {
+
+            it->amount -= trade.amount;
+            if (it->amount <= 0) {
+                open_orders_.erase(it);
+            }
             break;
         }
     }
+
     portfolio_["USD"] += trade.amount * trade.price;
 
-    filled_orders_.push_back(sell_order);
+    filled_orders_.push_back({sell_order.username, sell_order.side, trade.asset, trade.amount, trade.price});
 }
+
 
 std::map<std::string, int> UserAccount::GetPortfolio() const {
   return portfolio_;
