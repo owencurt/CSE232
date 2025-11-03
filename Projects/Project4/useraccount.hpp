@@ -21,9 +21,11 @@ class UserAccount {
   std::map<std::string, int> GetPortfolio() const;
   std::vector<Order> GetOpenOrders();
   void PrintOrders(std::ostream &os);
+  std::vector<Order> GetFilledOrders() const;
 
   private:
   std::string username_;
   std::map<std::string, int> portfolio_;
   std::vector<Order> open_orders_;
+  std::vector<Order> filled_orders_;
 };

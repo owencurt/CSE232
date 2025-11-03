@@ -99,11 +99,28 @@ bool Exchange::AddOrder(Order order) {
 }
 
 void Exchange::PrintUsersOrders(std::ostream &os) {
-  for (auto &[username, account] : users_) {
-    os << username << ":\n";
-    account.PrintOrders(os);
+  os << "Users Orders (in alphabetical order):\n";
+
+  for (auto &pair : users_) {
+    const std::string &username = pair.first;
+    UserAccount &account = pair.second;
+
+    os << username << "'s Open Orders (in chronological order):\n";
+    auto open_orders = account.GetOpenOrders();
+    for (auto &o : open_orders) {
+      os << o.side << " " << o.amount << " " << o.asset
+         << " at " << o.price << " USD by " << o.username << "\n";
+    }
+
+    os << username << "'s Filled Orders (in chronological order):\n";
+    auto filled_orders = account.GetFilledOrders();
+    for (auto &o : filled_orders) {
+      os << o.side << " " << o.amount << " " << o.asset
+         << " at " << o.price << " USD by " << o.username << "\n";
+    }
   }
 }
+
 
 void Exchange::PrintTradeHistory(std::ostream &os) {
   for (const auto &t : trade_history_) {
