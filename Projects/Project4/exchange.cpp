@@ -85,7 +85,7 @@ bool Exchange::AddOrder(Order order) {
       updated_open_orders.push_back(existing);
     }
     if (order.amount == 0) {
-      break;
+      continue;
     }
   }
 
