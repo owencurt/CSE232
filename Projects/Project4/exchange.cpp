@@ -42,54 +42,65 @@ bool Exchange::AddOrder(Order order) {
   if (users_.find(order.username) == users_.end()) {
     users_.emplace(order.username, UserAccount(order.username));
   }
-
   if (!users_[order.username].AddOrder(order)) {
     return false;
   }
 
-  std::vector<Order> updated_open_orders;
+  while (order.amount > 0) {
+    int best_idx = -1;
 
-  for (auto &existing : open_orders_) {
-    if (existing.asset != order.asset || existing.username == order.username) {
-      updated_open_orders.push_back(existing);
-      continue;
+    for (int i = 0; i < static_cast<int>(open_orders_.size()); ++i) {
+      const Order &ex = open_orders_[i];
+      if (ex.asset != order.asset) continue;
+
+      if (order.side == "Buy") {
+        if (ex.side == "Sell" && ex.price <= order.price) {
+          if (best_idx == -1) best_idx = i;
+          else {
+            const Order &cur = open_orders_[best_idx];
+            if (ex.price < cur.price || (ex.price == cur.price && i < best_idx)) {
+              best_idx = i;
+            }
+          }
+        }
+      } else {
+        if (ex.side == "Buy" && ex.price >= order.price) {
+          if (best_idx == -1) best_idx = i;
+          else {
+            const Order &cur = open_orders_[best_idx];
+            if (ex.price > cur.price || (ex.price == cur.price && i < best_idx)) {
+              best_idx = i;
+            }
+          }
+        }
+      }
     }
 
-    if (order.side == "Buy" && existing.side == "Sell" &&
-        existing.price <= order.price) {
-      int traded = std::min(order.amount, existing.amount);
-      Trade t{order.username, existing.username, order.asset, traded, order.price};
-      trade_history_.push_back(t);
+    if (best_idx == -1) break;
 
-      users_[order.username].PerformBuy(order, t);
-      users_[existing.username].PerformSell(existing, t);
+    Order &maker = open_orders_[best_idx];
+    int traded = std::min(order.amount, maker.amount);
+    if (traded > 0) {
+      if (order.side == "Buy") {
+        Trade t{order.username, maker.username, order.asset, traded, order.price};
+        trade_history_.push_back(t);
+        users_[order.username].PerformBuy(order, t);
+        users_[maker.username].PerformSell(maker, t);
+      } else {
+        Trade t{maker.username, order.username, order.asset, traded, order.price};
+        trade_history_.push_back(t);
+        users_[maker.username].PerformBuy(maker, t);
+        users_[order.username].PerformSell(order, t);
+      }
 
       order.amount -= traded;
-      existing.amount -= traded;
-    }
+      maker.amount -= traded;
 
-    else if (order.side == "Sell" && existing.side == "Buy" &&
-             existing.price >= order.price) {
-      int traded = std::min(order.amount, existing.amount);
-      Trade t{existing.username, order.username, order.asset, traded, order.price};
-      trade_history_.push_back(t);
-
-      users_[existing.username].PerformBuy(existing, t);
-      users_[order.username].PerformSell(order, t);
-
-      order.amount -= traded;
-      existing.amount -= traded;
-    }
-
-    if (existing.amount > 0) {
-      updated_open_orders.push_back(existing);
-    }
-    if (order.amount == 0) {
-      continue;
+      if (maker.amount == 0) {
+        open_orders_.erase(open_orders_.begin() + best_idx);
+      }
     }
   }
-
-  open_orders_ = updated_open_orders;
 
   if (order.amount > 0) {
     open_orders_.push_back(order);
@@ -97,6 +108,7 @@ bool Exchange::AddOrder(Order order) {
 
   return true;
 }
+
 
 void Exchange::PrintUsersOrders(std::ostream &os) {
   os << "Users Orders (in alphabetical order):\n";

@@ -44,6 +44,7 @@ bool UserAccount::AddOrder(Order order) {
 }
 
 void UserAccount::PerformBuy(Order &buy_order, const Trade &trade) {
+    if (trade.amount <= 0) return;
     for (auto it = open_orders_.begin(); it != open_orders_.end(); ++it) {
         if (it->username == buy_order.username &&
             it->asset == buy_order.asset &&
@@ -66,6 +67,7 @@ void UserAccount::PerformBuy(Order &buy_order, const Trade &trade) {
 
 
 void UserAccount::PerformSell(Order &sell_order, const Trade &trade) {
+    if (trade.amount <= 0) return;
     for (auto it = open_orders_.begin(); it != open_orders_.end(); ++it) {
         if (it->username == sell_order.username &&
             it->asset == sell_order.asset &&
