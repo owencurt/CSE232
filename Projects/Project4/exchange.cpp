@@ -146,13 +146,15 @@ void Exchange::PrintTradeHistory(std::ostream &os) {
 }
 
 void Exchange::PrintBidAskSpread(std::ostream &os) {
-  std::map<std::string, std::pair<int, int>> spread;
+  os << "Asset Bid Ask Spread (in alphabetical order):\n";
+
+  std::map<std::string, std::pair<int, int>> spread; 
 
   for (const auto &order : open_orders_) {
     auto &pair = spread[order.asset];
 
     if (order.side == "Buy") {
-      pair.first = std::max(pair.first, order.price);
+      pair.first = std::max(pair.first, order.price); 
     } else if (order.side == "Sell") {
       if (pair.second == 0)
         pair.second = order.price;
@@ -162,7 +164,10 @@ void Exchange::PrintBidAskSpread(std::ostream &os) {
   }
 
   for (const auto &[asset, prices] : spread) {
-    os << asset << " Bid: " << prices.first
-       << " Ask: " << prices.second << "\n";
+    std::string bidStr = (prices.first == 0) ? "NA" : std::to_string(prices.first);
+    std::string askStr = (prices.second == 0) ? "NA" : std::to_string(prices.second);
+
+    os << asset << ": Highest Open Buy = " << bidStr
+       << " USD and Lowest Open Sell = " << askStr << " USD\n";
   }
 }
